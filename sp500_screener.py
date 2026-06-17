@@ -122,7 +122,20 @@ class StockMetrics:
 def fetch_sp500_tickers() -> list[tuple[str, str]]:
     """Liefert Liste von (Ticker, Firmenname) Tupeln. Wirft Exception bei Fehler."""
     log.info("Lade S&P-500-Liste von Wikipedia...")
-    tables = pd.read_html(WIKIPEDIA_SP500_URL)
+
+    # Wikipedia blockt Requests ohne Browser-typischen User-Agent (403 Forbidden).
+    # Daher HTML selbst per requests holen und an pandas.read_html durchgeben,
+    # statt die URL direkt von pandas abrufen zu lassen.
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        )
+    }
+    response = requests.get(WIKIPEDIA_SP500_URL, headers=headers, timeout=15)
+    response.raise_for_status()
+
+    tables = pd.read_html(response.text)
     df = tables[0]  # Erste Tabelle enthaelt die Konstituenten
 
     if "Symbol" not in df.columns:
