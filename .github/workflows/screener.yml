@@ -1,0 +1,33 @@
+name: SP500 Fundamental Screener
+
+"on":
+  schedule:
+    # Ziel: ~15:30 Berlin-Zeit, passend zur NYSE-Eroeffnung (9:30 ET).
+    # Da Berlin (MEZ/MESZ) und US Eastern Time an unterschiedlichen Tagen
+    # auf Sommerzeit umstellen, decken zwei Cron-Eintraege beide Faelle ab.
+    # GitHub Actions cron laeuft immer in UTC.
+    - cron: '30 13 * * 1-5'  # Sommerzeit (Berlin UTC+2, ET UTC-4): 13:30 UTC = 15:30 Berlin / 9:30 ET
+    - cron: '30 14 * * 1-5'  # Winterzeit (Berlin UTC+1, ET UTC-5): 14:30 UTC = 15:30 Berlin / 9:30 ET
+  workflow_dispatch: {}  # ermoeglicht manuelles Triggern in der Actions-Oberflaeche zum Testen
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install yfinance requests pandas lxml
+
+      - name: Run screener
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: python3 sp500_screener.py
