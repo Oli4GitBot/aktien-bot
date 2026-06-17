@@ -100,6 +100,8 @@ def is_correct_trigger_for_season() -> bool:
 
 
 
+@dataclass
+class StockMetrics:
     ticker: str
     name: str
     trailing_pe: Optional[float] = None
