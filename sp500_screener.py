@@ -126,7 +126,9 @@ def fetch_sp500_tickers() -> list[tuple[str, str]]:
     """Liefert Liste von (Ticker, Firmenname) Tupeln. Wirft Exception bei Fehler."""
     log.info("Lade S&P-500-Liste von Wikipedia...")
     headers = {"User-Agent": "Mozilla/5.0 (compatible; SP500Screener/1.0)"}
-    tables = pd.read_html(WIKIPEDIA_SP500_URL, storage_options={"headers": headers})
+    resp = requests.get(WIKIPEDIA_SP500_URL, headers=headers, timeout=15)
+    resp.raise_for_status()
+    tables = pd.read_html(resp.text)
     df = tables[0]  # Erste Tabelle enthaelt die Konstituenten
 
     if "Symbol" not in df.columns:
