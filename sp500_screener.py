@@ -125,7 +125,8 @@ class StockMetrics:
 def fetch_sp500_tickers() -> list[tuple[str, str]]:
     """Liefert Liste von (Ticker, Firmenname) Tupeln. Wirft Exception bei Fehler."""
     log.info("Lade S&P-500-Liste von Wikipedia...")
-    tables = pd.read_html(WIKIPEDIA_SP500_URL)
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; SP500Screener/1.0)"}
+    tables = pd.read_html(WIKIPEDIA_SP500_URL, storage_options={"headers": headers})
     df = tables[0]  # Erste Tabelle enthaelt die Konstituenten
 
     if "Symbol" not in df.columns:
@@ -310,11 +311,4 @@ def main() -> int:
     try:
         send_telegram_message(message)
     except Exception as e:
-        log.error(f"Telegram-Versand fehlgeschlagen: {e}")
-        return 1
-
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+        log.error(f"Telegr
