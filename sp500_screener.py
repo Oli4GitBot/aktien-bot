@@ -311,4 +311,11 @@ def main() -> int:
     try:
         send_telegram_message(message)
     except Exception as e:
-        log.error(f"Telegr
+        log.error(f"Telegram-Versand fehlgeschlagen: {e}")
+        return 1
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
