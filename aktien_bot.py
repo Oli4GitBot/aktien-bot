@@ -31,7 +31,7 @@ def get_news(ticker):
             title = item.get("content", {}).get("title", "")
             link = item.get("content", {}).get("canonicalUrl", {}).get("url", "")
             if title:
-                recent.append(f"  • [{title}]({link})")
+                recent.append(f"  📰 [{title}]({link})")
         return recent
     except:
         return []
@@ -45,7 +45,7 @@ def get_kurs(name, ticker):
         change = round(preis - prev_close, 2)
         change_pct = round((change / prev_close) * 100, 2)
         waehrung = info.currency
-        pfeil = "🟢" if change >= 0 else "🔴"
+        pfeil = "📈" if change >= 0 else "📉"
         vorzeichen = "+" if change >= 0 else ""
         nachricht = (
             f"{pfeil} *{name}* ({ticker})\n"
@@ -54,14 +54,14 @@ def get_kurs(name, ticker):
         )
         news = get_news(ticker)
         if news:
-            nachricht += "  📰 Meldungen:\n" + "\n".join(news) + "\n"
+            nachricht += "  📋 Meldungen:\n" + "\n".join(news) + "\n"
         return nachricht
     except Exception as e:
         return f"⚠️ *{name}* ({ticker}): Fehler ({e})\n"
 
 def main():
     heute = datetime.now().strftime("%d.%m.%Y")
-    nachricht = f"📊 *Tägliche Aktien-Info — {heute}*\n\n"
+    nachricht = f"📊 *Tägliche Aktien-Info – {heute}*\n\n"
     for name, ticker in AKTIEN.items():
         nachricht += get_kurs(name, ticker) + "\n"
     send_telegram(nachricht)
