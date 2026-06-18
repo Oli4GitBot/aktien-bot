@@ -96,9 +96,9 @@ def is_correct_trigger_for_season() -> bool:
     current_utc_hour = now_utc.hour
 
     if is_berlin_summer_time:
-        return current_utc_hour == 13  # Sommerzeit-Trigger erwartet
+        return current_utc_hour in (13, 14)  # Sommerzeit-Trigger erwartet
     else:
-        return current_utc_hour == 14  # Winterzeit-Trigger erwartet
+        return current_utc_hour in (14, 15)  # Winterzeit-Trigger erwartet
 
 
 # ---------------------------------------------------------------------------
