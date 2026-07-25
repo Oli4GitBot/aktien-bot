@@ -12,7 +12,8 @@ AKTIEN = {
     "Zalando": "ZAL.DE",
     "Lanxess": "LXS.DE",
     "Microsoft": "MSFT",
-    "Bayer": "BAYN.DE"
+    "Bayer": "BAYN.DE",
+    "Amazon": "AMZN"
 }
 
 def send_telegram(message):
