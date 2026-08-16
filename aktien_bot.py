@@ -10,7 +10,6 @@ AKTIEN = {
     "Apple": "AAPL",
     "ASML": "ASML",
     "Zalando": "ZAL.DE",
-    "Lanxess": "LXS.DE",
     "Microsoft": "MSFT",
     "Bayer": "BAYN.DE",
     "Amazon": "AMZN"
